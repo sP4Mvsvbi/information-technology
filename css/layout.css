@@ -1,0 +1,213 @@
+/**
+ * Layout Styles
+ * Sidebar + main content grid with responsive behavior
+ */
+
+/* ============================================================================
+   APP LAYOUT
+   ============================================================================ */
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================================
+   SIDEBAR
+   ============================================================================ */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--transition-base);
+  z-index: var(--z-fixed);
+}
+
+.sidebar-header {
+  padding: var(--space-lg) var(--space-md);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  color: var(--color-primary);
+}
+
+.logo-text {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-md) 0;
+}
+
+.sidebar-group {
+  margin-bottom: var(--space-lg);
+}
+
+.sidebar-group-title {
+  padding: 0 var(--space-md);
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-tertiary);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  margin: 0 var(--space-sm);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+  position: relative;
+  border-radius: var(--radius-md);
+}
+
+.sidebar-link:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.sidebar-link.active {
+  background-color: var(--color-primary-light);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.sidebar-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background-color: var(--color-primary);
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+}
+
+.sidebar-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sidebar-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================================
+   MAIN CONTENT
+   ============================================================================ */
+
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+  transition: margin-left var(--transition-base);
+  position: relative;
+}
+
+.content-header {
+  padding: var(--space-lg) var(--space-xl);
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-light);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.content-header h1 {
+  margin-bottom: 0;
+}
+
+.content-body {
+  padding: var(--space-xl);
+}
+
+/* Alternative class names for page structure (used in dashboard and some pages) */
+.page-header {
+  padding: var(--space-lg) var(--space-xl);
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.page-header h1 {
+  margin-bottom: var(--space-xs);
+}
+
+.page-description {
+  color: var(--color-text-secondary);
+  margin-top: var(--space-xs);
+}
+
+.page-content {
+  padding: var(--space-xl);
+}
+
+/* ============================================================================
+   RESPONSIVE - SIDEBAR COLLAPSE
+   ============================================================================ */
+
+@media (max-width: 760px) {
+  .sidebar {
+    width: var(--sidebar-width-collapsed);
+  }
+
+  .sidebar-logo .logo-text,
+  .sidebar-group-title,
+  .sidebar-label {
+    display: none;
+  }
+
+  .sidebar-link {
+    justify-content: center;
+    padding: var(--space-md);
+  }
+
+  .sidebar-link.active::before {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: var(--sidebar-width-collapsed);
+  }
+}
+
+@media (max-width: 480px) {
+  .content-header {
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .content-body {
+    padding: var(--space-lg);
+  }
+}
+
+/* Made with Bob */

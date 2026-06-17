@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Inventory System</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar will be injected here -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main content -->
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="page-description">Overview of your inventory system</p>
+        </div>
+      </div>
+
+      <div class="page-content">
+        <!-- Metric cards -->
+        <div id="metric-cards" class="metric-cards-grid"></div>
+
+        <!-- Recent transactions section -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h2>Recent Transactions</h2>
+          </div>
+          <div id="recent-transactions-table"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal container -->
+  <div id="modal-container"></div>
+
+  <script type="module" src="js/pages/dashboard.js"></script>
+</body>
+</html>

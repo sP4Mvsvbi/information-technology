@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory - Inventory System</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar will be injected here -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-header">
+        <h1>Inventory</h1>
+      </div>
+
+      <div class="content-body">
+        <!-- Filters and Actions -->
+        <div class="page-actions">
+          <div class="filters">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search inventory..."
+              class="search-input"
+            >
+          </div>
+          <select id="warehouse-filter" class="filter-select">
+            <option value="">All Warehouses</option>
+          </select>
+          <select id="status-filter" class="filter-select">
+            <option value="">All Status</option>
+            <option value="healthy">Healthy</option>
+            <option value="low">Low Stock</option>
+          </select>
+        </div>
+
+        <!-- Inventory Table -->
+        <div id="inventory-table"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script type="module" src="js/pages/inventory.js"></script>
+</body>
+</html>

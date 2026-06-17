@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories - Inventory System</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar will be injected here -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-header">
+        <h1>Categories</h1>
+      </div>
+
+      <div class="content-body">
+        <!-- Filters and Actions -->
+        <div class="page-actions">
+          <div class="filters">
+            <input 
+              type="text" 
+              id="search-input" 
+              placeholder="Search categories..."
+              class="search-input"
+            >
+          </div>
+          <button class="btn btn-primary" id="add-category-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add Category
+          </button>
+        </div>
+
+        <!-- Categories Table -->
+        <div id="categories-table"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script type="module" src="js/pages/categories.js"></script>
+</body>
+</html>
