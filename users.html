@@ -10,44 +10,37 @@
   <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-  <div class="app-container">
+  <div class="app-layout">
     <!-- Sidebar will be injected here -->
     <div id="sidebar-container"></div>
 
-    <!-- Main content -->
+    <!-- Main Content -->
     <main class="main-content">
-      <div class="page-header">
-        <div>
-          <h1>Users</h1>
-          <p class="page-description">Manage system users and access control</p>
-        </div>
-        <button id="add-user-btn" class="btn btn-primary">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          Add User
-        </button>
+      <div class="content-header">
+        <h1>Users</h1>
       </div>
 
-      <div class="page-content">
-        <!-- Filters -->
-        <div class="filters-bar">
-          <div class="search-box">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <input 
-              type="text" 
-              id="search-input" 
+      <div class="content-body">
+        <!-- Filters and Actions -->
+        <div class="page-actions">
+          <div class="filters">
+            <input
+              type="text"
+              id="search-input"
               placeholder="Search users..."
+              class="search-input"
             >
           </div>
-
           <select id="role-filter" class="filter-select">
             <option value="">All Roles</option>
           </select>
+          <button id="add-user-btn" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add User
+          </button>
         </div>
 
         <!-- Users table -->
@@ -55,9 +48,6 @@
       </div>
     </main>
   </div>
-
-  <!-- Modal container -->
-  <div id="modal-container"></div>
 
   <script type="module" src="js/pages/users.js"></script>
 </body>
