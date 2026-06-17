@@ -30,4 +30,11 @@ yarn-error.log*
 *.tmp
 *.temp
 
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
 # Made with Bob
