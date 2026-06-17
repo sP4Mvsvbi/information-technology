@@ -6,6 +6,8 @@
 import { initSidebar } from '../components/sidebar.js';
 import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
+import { showToast } from '../components/toast.js';
+import { initSession } from '../components/session.js';
 import { getCategories } from '../data/mockData.js';
 import { debounce } from '../utils/utils.js';
 
