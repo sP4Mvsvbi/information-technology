@@ -29,7 +29,7 @@ import { escapeHtml } from '../utils/utils.js';
  *   onDelete: (row) => console.log('Delete', row)
  * });
  */
-export function renderTable({ mountId, columns, rows, emptyMessage = 'No data available', onEdit, onDelete }) {
+export function renderTable({ mountId, columns, rows, emptyMessage = 'No data available', onEdit, onDelete, deleteDisabled }) {
   const container = document.getElementById(mountId);
   if (!container) {
     console.error(`Table mount point #${mountId} not found`);
@@ -91,8 +91,10 @@ export function renderTable({ mountId, columns, rows, emptyMessage = 'No data av
              </svg>
            </button>`
         : '';
-      
-      const deleteButton = onDelete
+
+      // Hide delete button for rows where deleteDisabled returns true
+      const isDeleteDisabled = deleteDisabled && deleteDisabled(row);
+      const deleteButton = onDelete && !isDeleteDisabled
         ? `<button class="btn-icon btn-delete" data-action="delete" data-row-index="${rowIndex}" title="Delete">
              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                <polyline points="3 6 5 6 21 6"/>
@@ -103,7 +105,7 @@ export function renderTable({ mountId, columns, rows, emptyMessage = 'No data av
            </button>`
         : '';
 
-      actionsCell = `<td class="table-actions">${editButton}${deleteButton}</td>`;
+      actionsCell = `<td class="table-actions-cell"><div class="table-actions">${editButton}${deleteButton}</div></td>`;
     }
 
     return `<tr>${cells}${actionsCell}</tr>`;

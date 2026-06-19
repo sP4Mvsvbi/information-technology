@@ -8,7 +8,7 @@ import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { initSession } from '../components/session.js';
-import { getWarehouses } from '../data/mockData.js';
+import { getWarehouses, createWarehouse, updateWarehouse, deleteWarehouse } from '../utils/api.js';
 import { debounce } from '../utils/utils.js';
 
 // State
@@ -148,7 +148,7 @@ function showWarehouseModal() {
 /**
  * Handle warehouse form submission
  */
-function handleWarehouseSubmit() {
+async function handleWarehouseSubmit() {
   const form = document.getElementById('warehouse-form');
   
   if (!form.checkValidity()) {
@@ -161,26 +161,24 @@ function handleWarehouseSubmit() {
     location: document.getElementById('warehouse-location').value
   };
 
-  if (editingWarehouse) {
-    // Update existing warehouse
-    const index = warehouses.findIndex(w => w.warehouse_id === editingWarehouse.warehouse_id);
-    if (index !== -1) {
-      warehouses[index] = { ...warehouses[index], ...formData };
+  try {
+    if (editingWarehouse) {
+      // Update existing warehouse
+      formData.warehouse_id = editingWarehouse.warehouse_id;
+      await updateWarehouse(editingWarehouse.warehouse_id, formData);
+      showToast('Warehouse updated successfully', 'success');
+    } else {
+      // Add new warehouse
+      formData.warehouse_id = `W${String(warehouses.length + 1).padStart(3, '0')}`;
+      await createWarehouse(formData);
+      showToast('Warehouse added successfully', 'success');
     }
-    showToast('Warehouse updated successfully', 'success');
-  } else {
-    // Add new warehouse
-    const newWarehouse = {
-      warehouse_id: `W${String(warehouses.length + 1).padStart(3, '0')}`,
-      ...formData
-    };
-    warehouses.push(newWarehouse);
-    showToast('Warehouse added successfully', 'success');
-  }
 
-  // Refresh display
-  filterWarehouses();
-  closeModal();
+    await loadData();
+    closeModal();
+  } catch (error) {
+    showToast(error.message || 'Operation failed', 'error');
+  }
 }
 
 /**
@@ -194,11 +192,15 @@ function handleEdit(warehouse) {
 /**
  * Handle delete button click
  */
-function handleDelete(warehouse) {
+async function handleDelete(warehouse) {
   if (confirm(`Are you sure you want to delete "${warehouse.warehouse_name}"?`)) {
-    warehouses = warehouses.filter(w => w.warehouse_id !== warehouse.warehouse_id);
-    filterWarehouses();
-    showToast('Warehouse deleted successfully', 'success');
+    try {
+      await deleteWarehouse(warehouse.warehouse_id);
+      showToast('Warehouse deleted successfully', 'success');
+      await loadData();
+    } catch (error) {
+      showToast(error.message || 'Delete failed', 'error');
+    }
   }
 }
 

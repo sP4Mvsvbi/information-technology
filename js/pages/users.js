@@ -7,8 +7,8 @@ import { initSidebar } from '../components/sidebar.js';
 import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
-import { initSession } from '../components/session.js';
-import { getUsers } from '../data/mockData.js';
+import { initSession, getCurrentUser } from '../components/session.js';
+import { getUsers, createUser, updateUser, deleteUser } from '../data/api.js';
 import { debounce, escapeHtml } from '../utils/utils.js';
 
 // State
@@ -124,6 +124,8 @@ function filterUsers() {
  * Render users table
  */
 function renderUsersTable() {
+  const currentUser = getCurrentUser();
+
   renderTable({
     mountId: 'users-table',
     columns: [
@@ -133,7 +135,6 @@ function renderUsersTable() {
         key: 'role',
         label: 'Role',
         render: (row) => {
-          // Role badge with color based on role
           const roleColors = {
             'Admin': 'danger',
             'Manager': 'warning',
@@ -148,7 +149,13 @@ function renderUsersTable() {
     rows: filteredUsers,
     emptyMessage: 'No users found',
     onEdit: handleEdit,
-    onDelete: handleDelete
+    // Pass null as onDelete for the logged-in user's own row so no delete button renders
+    onDelete: (row) => {
+      if (currentUser && row.user_id === currentUser.id) return null;
+      handleDelete(row);
+    },
+    // Tell the table which rows should hide the delete button
+    deleteDisabled: (row) => currentUser && row.user_id === currentUser.id
   });
 }
 
@@ -254,7 +261,7 @@ function showUserModal() {
 /**
  * Handle user form submission
  */
-function handleUserSubmit() {
+async function handleUserSubmit() {
   const form = document.getElementById('user-form');
   
   if (!form.checkValidity()) {
@@ -264,42 +271,42 @@ function handleUserSubmit() {
 
   const formData = {
     full_name: document.getElementById('user-fullname').value,
-    username: document.getElementById('user-username').value,
-    email: document.getElementById('user-email').value,
-    role: document.getElementById('user-role').value
+    username:  document.getElementById('user-username').value,
+    email:     document.getElementById('user-email').value,
+    role:      document.getElementById('user-role').value
   };
 
   // Validate passwords for new users
   if (!editingUser) {
-    const password = document.getElementById('user-password').value;
+    const password        = document.getElementById('user-password').value;
     const passwordConfirm = document.getElementById('user-password-confirm').value;
 
     if (password !== passwordConfirm) {
       showToast('Passwords do not match', 'error');
       return;
     }
+    formData.password = password;
   }
 
-  if (editingUser) {
-    // Update existing user
-    const index = users.findIndex(u => u.user_id === editingUser.user_id);
-    if (index !== -1) {
-      users[index] = { ...users[index], ...formData };
+  try {
+    if (editingUser) {
+      // Update via API
+      await updateUser(editingUser.user_id, formData);
+      showToast('User updated successfully', 'success');
+    } else {
+      // Create via API
+      await createUser(formData);
+      showToast('User added successfully', 'success');
     }
-    showToast('User updated successfully', 'success');
-  } else {
-    // Add new user
-    const newUser = {
-      user_id: `U${String(users.length + 1).padStart(3, '0')}`,
-      ...formData
-    };
-    users.push(newUser);
-    showToast('User added successfully', 'success');
-  }
 
-  // Refresh display
-  filterUsers();
-  closeModal();
+    // Reload from server so the table reflects DB state
+    users = await getUsers();
+    filteredUsers = [...users];
+    renderUsersTable();
+    closeModal();
+  } catch (error) {
+    showToast(error.message || 'An error occurred', 'error');
+  }
 }
 
 /**
@@ -322,12 +329,17 @@ function handleDelete(user) {
     title: 'Delete User',
     bodyHtml,
     confirmLabel: 'Delete',
-    onConfirm: () => {
-      // Perform the actual delete
-      users = users.filter(u => u.user_id !== user.user_id);
-      filterUsers();
-      closeModal();
-      showToast('User deleted successfully', 'success');
+    onConfirm: async () => {
+      try {
+        await deleteUser(user.user_id);
+        users = users.filter(u => u.user_id !== user.user_id);
+        filteredUsers = filteredUsers.filter(u => u.user_id !== user.user_id);
+        renderUsersTable();
+        closeModal();
+        showToast('User deactivated successfully', 'success');
+      } catch (error) {
+        showToast(error.message || 'Failed to delete user', 'error');
+      }
     }
   });
 

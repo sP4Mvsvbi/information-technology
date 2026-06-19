@@ -210,4 +210,96 @@
   }
 }
 
+/* ============================================================================
+   SIDEBAR FOOTER
+   ============================================================================ */
+
+.sidebar-footer {
+  padding: var(--space-md);
+  border-top: 1px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  overflow: hidden;
+}
+
+.sidebar-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.sidebar-user-info {
+  overflow: hidden;
+}
+
+.sidebar-user-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-role {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+}
+
+.sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+  transition: background var(--transition-fast);
+}
+
+.sidebar-logout-btn:hover {
+  background: var(--color-danger-light);
+}
+
+/* Hide text labels when sidebar is collapsed on mobile */
+@media (max-width: 760px) {
+  .sidebar-user-info,
+  .sidebar-logout-label {
+    display: none;
+  }
+
+  .sidebar-user {
+    justify-content: center;
+    padding: var(--space-xs);
+  }
+
+  .sidebar-logout-btn {
+    justify-content: center;
+    padding: var(--space-sm);
+  }
+}
+
 /* Made with Bob */

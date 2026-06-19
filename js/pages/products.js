@@ -8,7 +8,7 @@ import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { initSession } from '../components/session.js';
-import { getProducts, getCategories, getSuppliers } from '../data/mockData.js';
+import { getProducts, createProduct, updateProduct, deleteProduct, getCategories, getSuppliers } from '../utils/api.js';
 import { formatCurrency, joinById, debounce } from '../utils/utils.js';
 
 // State
@@ -243,7 +243,7 @@ function showProductModal() {
 /**
  * Handle product form submission
  */
-function handleProductSubmit() {
+async function handleProductSubmit() {
   const form = document.getElementById('product-form');
   
   if (!form.checkValidity()) {
@@ -259,26 +259,24 @@ function handleProductSubmit() {
     unit_price: parseFloat(document.getElementById('product-price').value)
   };
 
-  if (editingProduct) {
-    // Update existing product
-    const index = products.findIndex(p => p.product_id === editingProduct.product_id);
-    if (index !== -1) {
-      products[index] = { ...products[index], ...formData };
+  try {
+    if (editingProduct) {
+      // Update existing product
+      formData.product_id = editingProduct.product_id;
+      await updateProduct(editingProduct.product_id, formData);
+      showToast('Product updated successfully', 'success');
+    } else {
+      // Add new product
+      formData.product_id = `P${String(products.length + 1).padStart(3, '0')}`;
+      await createProduct(formData);
+      showToast('Product added successfully', 'success');
     }
-    showToast('Product updated successfully', 'success');
-  } else {
-    // Add new product
-    const newProduct = {
-      product_id: `P${String(products.length + 1).padStart(3, '0')}`,
-      ...formData
-    };
-    products.push(newProduct);
-    showToast('Product added successfully', 'success');
-  }
 
-  // Refresh display
-  filterProducts();
-  closeModal();
+    await loadData();
+    closeModal();
+  } catch (error) {
+    showToast(error.message || 'Operation failed', 'error');
+  }
 }
 
 /**
@@ -292,11 +290,15 @@ function handleEdit(product) {
 /**
  * Handle delete button click
  */
-function handleDelete(product) {
+async function handleDelete(product) {
   if (confirm(`Are you sure you want to delete "${product.product_name}"?`)) {
-    products = products.filter(p => p.product_id !== product.product_id);
-    filterProducts();
-    showToast('Product deleted successfully', 'success');
+    try {
+      await deleteProduct(product.product_id);
+      showToast('Product deleted successfully', 'success');
+      await loadData();
+    } catch (error) {
+      showToast(error.message || 'Delete failed', 'error');
+    }
   }
 }
 

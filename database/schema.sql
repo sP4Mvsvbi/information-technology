@@ -192,11 +192,11 @@ INSERT INTO Warehouse (warehouse_id, warehouse_name, location, capacity) VALUES
 ('W001', 'Main Warehouse', 'Caypombo', 10000),
 ('W002', 'Branch Warehouse', 'Poblacion', 5000);
 
--- Insert Users (password: hashed version of 'password123')
+-- Insert Users (passwords: jsmith=smith123 | jdoe=doe123 | ggates=gates123)
 INSERT INTO Users (user_id, full_name, username, email, hashed_password, role) VALUES
-('U001', 'John Smith', 'jsmith', 'jsmith@ex.com', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5NU7qXqw9qiJO', 'Admin'),
-('U002', 'Jane Doe', 'jdoe', 'jdoe@ex.com', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5NU7qXqw9qiJO', 'Manager'),
-('U003', 'Grace Gates', 'ggates', 'ggates@ex.com', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5NU7qXqw9qiJO', 'Staff');
+('U001', 'John Smith',  'jsmith',  'jsmith@ex.com',  '$2b$12$Vi/OgeRzg0duxWAOPlm/1OJC4FZUbK0xyT7fXqq.baFVgNOR07qou', 'Admin'),
+('U002', 'Jane Doe',    'jdoe',    'jdoe@ex.com',    '$2b$12$c4U0wOr0Wfkq1qjOq4L3l.84IEG.RUeslslGV4CA1Og2WGcnhtUU6', 'Manager'),
+('U003', 'Grace Gates', 'ggates',  'ggates@ex.com',  '$2b$12$pJC3HgTZc4Kr08YjaiBPS.c5hgF.YsrJK1MxuMZ8nXzGkB8ay9r22', 'Staff');
 
 -- Insert Products
 INSERT INTO Product (product_id, product_name, description, unit_price, category_id, supplier_id) VALUES

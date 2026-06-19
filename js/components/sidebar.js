@@ -3,6 +3,8 @@
  * Renders grouped navigation menu with active state highlighting
  */
 
+import { logout } from '../utils/api.js';
+
 // Simple inline SVG icons
 const ICONS = {
   dashboard: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
@@ -83,6 +85,23 @@ export function renderSidebar(currentPageKey) {
 
   const logoIcon = ICONS.products; // Using package icon for logo
 
+  // Get current user from sessionStorage for footer display
+  let userName = '';
+  let userRole = '';
+  let userInitials = '';
+  try {
+    const stored = sessionStorage.getItem('currentUser');
+    if (stored) {
+      const u = JSON.parse(stored);
+      userName = u.name || '';
+      userRole = u.role || '';
+      const parts = userName.trim().split(' ');
+      userInitials = parts.length >= 2
+        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        : userName.substring(0, 2).toUpperCase();
+    }
+  } catch (e) { /* ignore */ }
+
   return `
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
@@ -94,6 +113,23 @@ export function renderSidebar(currentPageKey) {
       <nav class="sidebar-nav">
         ${groupsHtml}
       </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar">${userInitials}</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">${userName}</div>
+            <div class="sidebar-user-role">${userRole}</div>
+          </div>
+        </div>
+        <button class="sidebar-logout-btn" id="sidebar-logout-btn" title="Log Out">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span class="sidebar-logout-label">Log Out</span>
+        </button>
+      </div>
     </aside>
   `;
 }
@@ -106,6 +142,21 @@ export function initSidebar(currentPageKey) {
   const sidebarContainer = document.getElementById('sidebar-container');
   if (sidebarContainer) {
     sidebarContainer.innerHTML = renderSidebar(currentPageKey);
+
+    // Wire up logout button
+    const logoutBtn = document.getElementById('sidebar-logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await logout();
+        } catch (e) {
+          console.error('Logout error:', e);
+        }
+        sessionStorage.removeItem('currentUser');
+        sessionStorage.removeItem('token');
+        window.location.href = 'login.html';
+      });
+    }
   }
 }
 

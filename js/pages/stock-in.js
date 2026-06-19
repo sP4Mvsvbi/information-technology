@@ -8,7 +8,7 @@ import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { initSession } from '../components/session.js';
-import { getStockIn, getProducts, getWarehouses, getSuppliers, getUsers } from '../data/mockData.js';
+import { getStockIn, createStockIn, getProducts, getWarehouses, getSuppliers, getUsers } from '../utils/api.js';
 import { joinById, formatDate, debounce } from '../utils/utils.js';
 
 // State
@@ -278,7 +278,7 @@ function showStockInModal() {
 /**
  * Handle stock in form submission
  */
-function handleStockInSubmit() {
+async function handleStockInSubmit() {
   const form = document.getElementById('stock-in-form');
   
   if (!form.checkValidity()) {
@@ -295,18 +295,16 @@ function handleStockInSubmit() {
     date_received: document.getElementById('stock-in-date').value
   };
 
-  // Add new record (no editing for historical transactions)
-  const newStockIn = {
-    stock_in_id: `SI${String(stockInRecords.length + 1).padStart(3, '0')}`,
-    ...formData
-  };
-  stockInRecords.push(newStockIn);
-
-  showToast('Stock in record added successfully', 'success');
-
-  // Refresh display
-  filterStockIn();
-  closeModal();
+  try {
+    // Generate ID
+    formData.stock_in_id = `SI${String(stockInRecords.length + 1).padStart(3, '0')}`;
+    await createStockIn(formData);
+    showToast('Stock in record added successfully', 'success');
+    await loadData();
+    closeModal();
+  } catch (error) {
+    showToast(error.message || 'Operation failed', 'error');
+  }
 }
 
 // Initialize page when DOM is ready

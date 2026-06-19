@@ -223,14 +223,23 @@
   background-color: var(--color-bg-secondary);
 }
 
+.table-actions-cell {
+  text-align: right;
+  white-space: nowrap;
+  width: 1%;
+}
+
 .table-actions {
-  display: flex;
+  display: inline-flex;
   gap: var(--space-xs);
+  align-items: center;
   justify-content: flex-end;
 }
 
 .table-actions-header {
   text-align: right;
+  white-space: nowrap;
+  width: 1%;
 }
 
 .table-empty {

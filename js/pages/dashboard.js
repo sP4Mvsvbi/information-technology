@@ -14,7 +14,7 @@ import {
   getSuppliers,
   getStockIn,
   getStockOut
-} from '../data/mockData.js';
+} from '../data/api.js';
 import { joinById, formatDate, isLowStock } from '../utils/utils.js';
 
 // State
