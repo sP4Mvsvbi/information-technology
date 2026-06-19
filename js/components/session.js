@@ -3,6 +3,8 @@
  * Manages user session and displays session bar
  */
 
+import { logout } from '../utils/api.js';
+
 let currentUser = null;
 
 /**
@@ -152,7 +154,12 @@ function setupEventListeners() {
 /**
  * Handle logout
  */
-function handleLogout() {
+async function handleLogout() {
+  try {
+    await logout();
+  } catch (error) {
+    console.error('Failed to logout from backend:', error);
+  }
   // Clear session
   currentUser = null;
   sessionStorage.removeItem('currentUser');
