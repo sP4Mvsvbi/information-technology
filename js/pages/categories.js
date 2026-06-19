@@ -8,7 +8,7 @@ import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { initSession } from '../components/session.js';
-import { getCategories } from '../data/mockData.js';
+import { getCategories, createCategory, updateCategory, deleteCategory } from '../utils/api.js';
 import { debounce } from '../utils/utils.js';
 
 // State
@@ -145,7 +145,7 @@ function showCategoryModal() {
 /**
  * Handle category form submission
  */
-function handleCategorySubmit() {
+async function handleCategorySubmit() {
   const form = document.getElementById('category-form');
   
   if (!form.checkValidity()) {
@@ -158,26 +158,24 @@ function handleCategorySubmit() {
     description: document.getElementById('category-description').value
   };
 
-  if (editingCategory) {
-    // Update existing category
-    const index = categories.findIndex(c => c.category_id === editingCategory.category_id);
-    if (index !== -1) {
-      categories[index] = { ...categories[index], ...formData };
+  try {
+    if (editingCategory) {
+      // Update existing category
+      formData.category_id = editingCategory.category_id;
+      await updateCategory(editingCategory.category_id, formData);
+      showToast('Category updated successfully', 'success');
+    } else {
+      // Add new category
+      formData.category_id = `C${String(categories.length + 1).padStart(3, '0')}`;
+      await createCategory(formData);
+      showToast('Category added successfully', 'success');
     }
-    showToast('Category updated successfully', 'success');
-  } else {
-    // Add new category
-    const newCategory = {
-      category_id: `C${String(categories.length + 1).padStart(3, '0')}`,
-      ...formData
-    };
-    categories.push(newCategory);
-    showToast('Category added successfully', 'success');
+    
+    await loadData();
+    closeModal();
+  } catch (error) {
+    showToast(error.message || 'Operation failed', 'error');
   }
-
-  // Refresh display
-  filterCategories();
-  closeModal();
 }
 
 /**
@@ -191,11 +189,15 @@ function handleEdit(category) {
 /**
  * Handle delete button click
  */
-function handleDelete(category) {
+async function handleDelete(category) {
   if (confirm(`Are you sure you want to delete "${category.category_name}"?`)) {
-    categories = categories.filter(c => c.category_id !== category.category_id);
-    filterCategories();
-    showToast('Category deleted successfully', 'success');
+    try {
+      await deleteCategory(category.category_id);
+      showToast('Category deleted successfully', 'success');
+      await loadData();
+    } catch (error) {
+      showToast(error.message || 'Delete failed', 'error');
+    }
   }
 }
 
