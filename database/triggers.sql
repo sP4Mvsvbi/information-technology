@@ -18,6 +18,8 @@ CREATE TRIGGER trg_after_stock_in_insert
 AFTER INSERT ON Stock_In
 FOR EACH ROW
 BEGIN
+    DECLARE next_id INT;
+
     -- Update inventory quantity
     UPDATE Inventory
     SET quantity_on_hand = quantity_on_hand + NEW.quantity,
@@ -27,6 +29,8 @@ BEGIN
     
     -- If inventory record doesn't exist, create it
     IF ROW_COUNT() = 0 THEN
+        SELECT COUNT(*) + 1 INTO next_id FROM Inventory;
+
         INSERT INTO Inventory (
             inventory_id,
             product_id,
@@ -34,7 +38,7 @@ BEGIN
             quantity_on_hand,
             reorder_level
         ) VALUES (
-            CONCAT('I', LPAD((SELECT COUNT(*) + 1 FROM Inventory), 3, '0')),
+            CONCAT('I', LPAD(next_id, 3, '0')),
             NEW.product_id,
             NEW.warehouse_id,
             NEW.quantity,
