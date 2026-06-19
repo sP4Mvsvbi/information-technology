@@ -15,11 +15,19 @@ from config import Config
 from routes.auth import auth_bp
 from routes.dashboard import dashboard_bp
 from routes.users import users_bp
+from routes.suppliers import suppliers_bp
+from routes.categories import categories_bp
+from routes.products import products_bp
+from routes.warehouses import warehouses_bp
+from routes.inventory import inventory_bp
+from routes.stock_in import stock_in_bp
+from routes.stock_out import stock_out_bp
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.url_map.strict_slashes = False
 
     # ------------------------------------------------------------------
     # CORS — allow the frontend origin defined in .env to call the API
@@ -38,6 +46,13 @@ def create_app() -> Flask:
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(users_bp)
+    app.register_blueprint(suppliers_bp)
+    app.register_blueprint(categories_bp)
+    app.register_blueprint(products_bp)
+    app.register_blueprint(warehouses_bp)
+    app.register_blueprint(inventory_bp)
+    app.register_blueprint(stock_in_bp)
+    app.register_blueprint(stock_out_bp)
 
     # ------------------------------------------------------------------
     # Health check
@@ -89,6 +104,36 @@ if __name__ == "__main__":
     print("    POST   /api/users/")
     print("    PUT    /api/users/<user_id>")
     print("    DELETE /api/users/<user_id>")
+    print()
+    print("    GET    /api/suppliers/")
+    print("    POST   /api/suppliers/")
+    print("    PUT    /api/suppliers/<supplier_id>")
+    print("    DELETE /api/suppliers/<supplier_id>")
+    print()
+    print("    GET    /api/categories/")
+    print("    POST   /api/categories/")
+    print("    PUT    /api/categories/<category_id>")
+    print("    DELETE /api/categories/<category_id>")
+    print()
+    print("    GET    /api/products/")
+    print("    POST   /api/products/")
+    print("    PUT    /api/products/<product_id>")
+    print("    DELETE /api/products/<product_id>")
+    print()
+    print("    GET    /api/warehouses/")
+    print("    POST   /api/warehouses/")
+    print("    PUT    /api/warehouses/<warehouse_id>")
+    print("    DELETE /api/warehouses/<warehouse_id>")
+    print()
+    print("    GET    /api/inventory/")
+    print("    GET    /api/inventory/low-stock")
+    print("    PUT    /api/inventory/<inventory_id>")
+    print()
+    print("    GET    /api/stock-in/")
+    print("    POST   /api/stock-in/")
+    print()
+    print("    GET    /api/stock-out/")
+    print("    POST   /api/stock-out/")
     print()
     print("  Press Ctrl+C to stop.")
     print()
