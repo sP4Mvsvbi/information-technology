@@ -8,7 +8,7 @@ import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { initSession } from '../components/session.js';
-import { getStockOut, getProducts, getWarehouses, getUsers } from '../data/mockData.js';
+import { getStockOut, createStockOut, getProducts, getWarehouses, getUsers } from '../utils/api.js';
 import { joinById, formatDate, debounce } from '../utils/utils.js';
 
 // State
@@ -267,7 +267,7 @@ function showStockOutModal() {
 /**
  * Handle stock out form submission
  */
-function handleStockOutSubmit() {
+async function handleStockOutSubmit() {
   const form = document.getElementById('stock-out-form');
   
   if (!form.checkValidity()) {
@@ -284,18 +284,16 @@ function handleStockOutSubmit() {
     date_released: document.getElementById('stock-out-date').value
   };
 
-  // Add new record (no editing for historical transactions)
-  const newStockOut = {
-    stock_out_id: `SO${String(stockOutRecords.length + 1).padStart(3, '0')}`,
-    ...formData
-  };
-  stockOutRecords.push(newStockOut);
-
-  showToast('Stock out record added successfully', 'success');
-
-  // Refresh display
-  filterStockOut();
-  closeModal();
+  try {
+    // Generate ID
+    formData.stock_out_id = `SO${String(stockOutRecords.length + 1).padStart(3, '0')}`;
+    await createStockOut(formData);
+    showToast('Stock out record added successfully', 'success');
+    await loadData();
+    closeModal();
+  } catch (error) {
+    showToast(error.message || 'Operation failed', 'error');
+  }
 }
 
 // Initialize page when DOM is ready
