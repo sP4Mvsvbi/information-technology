@@ -307,7 +307,7 @@ const USERS = [
     username: 'jsmith',
     email: 'jsmith@ex.com',
     hashed_password: '-----',
-    role: 'Staff'
+    role: 'Admin'
   },
   {
     user_id: 'U002',
@@ -315,15 +315,7 @@ const USERS = [
     username: 'jdoe',
     email: 'jdoe@ex.com',
     hashed_password: '-----',
-    role: 'Staff'
-  },
-  {
-    user_id: 'U003',
-    full_name: 'Grace Gates',
-    username: 'ggates',
-    email: 'ggates@ex.com',
-    hashed_password: '-----',
-    role: 'Staff'
+    role: 'Manager'
   }
 ];
 

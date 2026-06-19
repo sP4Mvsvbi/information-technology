@@ -100,7 +100,7 @@
 - username (VARCHAR(50), NOT NULL, UNIQUE)
 - email (VARCHAR(100), NOT NULL, UNIQUE)
 - hashed_password (VARCHAR(255), NOT NULL)
-- role (ENUM: 'Admin', 'Manager', 'Staff')
+- role (ENUM: 'Admin', 'Manager')
 - is_active (BOOLEAN, DEFAULT TRUE)
 - created_at (TIMESTAMP)
 - updated_at (TIMESTAMP)

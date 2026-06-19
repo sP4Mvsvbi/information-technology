@@ -768,7 +768,7 @@ CREATE PROCEDURE sp_create_user(
     IN p_username VARCHAR(50),
     IN p_email VARCHAR(100),
     IN p_hashed_password VARCHAR(255),
-    IN p_role ENUM('Admin', 'Manager', 'Staff')
+    IN p_role ENUM('Admin', 'Manager')
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -794,7 +794,7 @@ CREATE PROCEDURE sp_update_user(
     IN p_user_id VARCHAR(10),
     IN p_full_name VARCHAR(150),
     IN p_email VARCHAR(100),
-    IN p_role ENUM('Admin', 'Manager', 'Staff')
+    IN p_role ENUM('Admin', 'Manager')
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION

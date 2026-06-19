@@ -59,7 +59,7 @@ php -S localhost:8000
 |----------|-----------|---------|
 | jsmith   | smith123  | Admin   |
 | jdoe     | doe123    | Manager |
-| ggates   | gates123  | Staff   |
+
 
 See `CREDENTIALS.md` for full details.
 

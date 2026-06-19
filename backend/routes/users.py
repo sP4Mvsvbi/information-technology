@@ -75,7 +75,7 @@ def create_user():
         "username":  "johndoe",
         "email":     "john@example.com",
         "password":  "plaintext_password",
-        "role":      "Staff"          // Admin | Manager | Staff
+        "role":      "Manager"          // Admin | Manager
     }
     """
     data = request.get_json(silent=True)
@@ -87,7 +87,7 @@ def create_user():
     if missing:
         return jsonify({"error": f"Missing fields: {', '.join(missing)}"}), 400
 
-    valid_roles = ("Admin", "Manager", "Staff")
+    valid_roles = ("Admin", "Manager")
     if data["role"] not in valid_roles:
         return jsonify({"error": f"role must be one of: {', '.join(valid_roles)}"}), 400
 
@@ -163,7 +163,7 @@ def update_user(user_id: str):
         email     = data.get("email",     current["email"])
         role      = data.get("role",      current["role"])
 
-        valid_roles = ("Admin", "Manager", "Staff")
+        valid_roles = ("Admin", "Manager")
         if role not in valid_roles:
             return jsonify({"error": f"role must be one of: {', '.join(valid_roles)}"}), 400
 

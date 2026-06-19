@@ -294,7 +294,7 @@ This ensures:
 ## 🔒 Security Features
 
 1. **JWT Authentication** - Token-based API security
-2. **Role-Based Access** - Admin, Manager, Staff roles
+2. **Role-Based Access** - Admin, Manager roles
 3. **SQL Injection Prevention** - Parameterized stored procedures
 4. **Password Hashing** - Ready for bcrypt implementation
 5. **CORS Protection** - Controlled cross-origin requests

@@ -67,7 +67,7 @@ CREATE TABLE Users (
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     hashed_password VARCHAR(255) NOT NULL,
-    role ENUM('Admin', 'Manager', 'Staff') NOT NULL DEFAULT 'Staff',
+    role ENUM('Admin', 'Manager') NOT NULL DEFAULT 'Manager',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -192,11 +192,10 @@ INSERT INTO Warehouse (warehouse_id, warehouse_name, location, capacity) VALUES
 ('W001', 'Main Warehouse', 'Caypombo', 10000),
 ('W002', 'Branch Warehouse', 'Poblacion', 5000);
 
--- Insert Users (passwords: jsmith=smith123 | jdoe=doe123 | ggates=gates123)
+-- Insert Users (passwords: jsmith=smith123 | jdoe=doe123)
 INSERT INTO Users (user_id, full_name, username, email, hashed_password, role) VALUES
 ('U001', 'John Smith',  'jsmith',  'jsmith@ex.com',  '$2b$12$Vi/OgeRzg0duxWAOPlm/1OJC4FZUbK0xyT7fXqq.baFVgNOR07qou', 'Admin'),
-('U002', 'Jane Doe',    'jdoe',    'jdoe@ex.com',    '$2b$12$c4U0wOr0Wfkq1qjOq4L3l.84IEG.RUeslslGV4CA1Og2WGcnhtUU6', 'Manager'),
-('U003', 'Grace Gates', 'ggates',  'ggates@ex.com',  '$2b$12$pJC3HgTZc4Kr08YjaiBPS.c5hgF.YsrJK1MxuMZ8nXzGkB8ay9r22', 'Staff');
+('U002', 'Jane Doe',    'jdoe',    'jdoe@ex.com',    '$2b$12$c4U0wOr0Wfkq1qjOq4L3l.84IEG.RUeslslGV4CA1Og2WGcnhtUU6', 'Manager');
 
 -- Insert Products
 INSERT INTO Product (product_id, product_name, description, unit_price, category_id, supplier_id) VALUES
@@ -221,7 +220,7 @@ INSERT INTO Stock_In (stock_in_id, product_id, warehouse_id, supplier_id, user_i
 
 -- Insert Stock_Out records
 INSERT INTO Stock_Out (stock_out_id, product_id, warehouse_id, user_id, quantity, date_released, destination) VALUES
-('SO001', 'P004', 'W002', 'U003', 200, '2026-03-15', 'Tierra');
+('SO001', 'P004', 'W002', 'U002', 200, '2026-03-15', 'Tierra');
 
 -- ============================================================================
 -- SCHEMA CREATION COMPLETE

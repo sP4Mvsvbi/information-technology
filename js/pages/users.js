@@ -17,7 +17,7 @@ let filteredUsers = [];
 let editingUser = null;
 
 // Role options
-const ROLES = ['Admin', 'Manager', 'Staff', 'Viewer'];
+const ROLES = ['Admin', 'Manager', 'Viewer'];
 
 /**
  * Initialize the page
@@ -138,7 +138,7 @@ function renderUsersTable() {
           const roleColors = {
             'Admin': 'danger',
             'Manager': 'warning',
-            'Staff': 'info',
+
             'Viewer': 'default'
           };
           const badgeClass = roleColors[row.role] || 'default';

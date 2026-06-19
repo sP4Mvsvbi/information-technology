@@ -212,7 +212,7 @@ mysql -u root -p < database/stored_procedures.sql
    |----------|----------|---------|
    | jsmith   | smith123 | Admin   |
    | jdoe     | doe123   | Manager |
-   | ggates   | gates123 | Staff   |
+
 
 3. **Explore the System**
    - Dashboard
