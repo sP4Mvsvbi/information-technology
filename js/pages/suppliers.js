@@ -8,7 +8,7 @@ import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { initSession } from '../components/session.js';
-import { getSuppliers } from '../data/mockData.js';
+import { getSuppliers, createSupplier, updateSupplier, deleteSupplier } from '../utils/api.js';
 import { debounce } from '../utils/utils.js';
 
 // State
@@ -173,7 +173,7 @@ function showSupplierModal() {
 /**
  * Handle supplier form submission
  */
-function handleSupplierSubmit() {
+async function handleSupplierSubmit() {
   const form = document.getElementById('supplier-form');
   
   if (!form.checkValidity()) {
@@ -188,26 +188,25 @@ function handleSupplierSubmit() {
     address: document.getElementById('supplier-address').value
   };
 
-  if (editingSupplier) {
-    // Update existing supplier
-    const index = suppliers.findIndex(s => s.supplier_id === editingSupplier.supplier_id);
-    if (index !== -1) {
-      suppliers[index] = { ...suppliers[index], ...formData };
+  try {
+    if (editingSupplier) {
+      // Update existing supplier
+      formData.supplier_id = editingSupplier.supplier_id;
+      await updateSupplier(editingSupplier.supplier_id, formData);
+      showToast('Supplier updated successfully', 'success');
+    } else {
+      // Add new supplier - generate ID
+      formData.supplier_id = `S${String(suppliers.length + 1).padStart(3, '0')}`;
+      await createSupplier(formData);
+      showToast('Supplier added successfully', 'success');
     }
-    showToast('Supplier updated successfully', 'success');
-  } else {
-    // Add new supplier
-    const newSupplier = {
-      supplier_id: `S${String(suppliers.length + 1).padStart(3, '0')}`,
-      ...formData
-    };
-    suppliers.push(newSupplier);
-    showToast('Supplier added successfully', 'success');
-  }
 
-  // Refresh display
-  filterSuppliers();
-  closeModal();
+    // Reload data from server
+    await loadData();
+    closeModal();
+  } catch (error) {
+    showToast(error.message || 'Operation failed', 'error');
+  }
 }
 
 /**
@@ -221,11 +220,15 @@ function handleEdit(supplier) {
 /**
  * Handle delete button click
  */
-function handleDelete(supplier) {
+async function handleDelete(supplier) {
   if (confirm(`Are you sure you want to delete "${supplier.supplier_name}"?`)) {
-    suppliers = suppliers.filter(s => s.supplier_id !== supplier.supplier_id);
-    filterSuppliers();
-    showToast('Supplier deleted successfully', 'success');
+    try {
+      await deleteSupplier(supplier.supplier_id);
+      showToast('Supplier deleted successfully', 'success');
+      await loadData();
+    } catch (error) {
+      showToast(error.message || 'Delete failed', 'error');
+    }
   }
 }
 

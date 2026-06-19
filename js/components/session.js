@@ -156,6 +156,7 @@ function handleLogout() {
   // Clear session
   currentUser = null;
   sessionStorage.removeItem('currentUser');
+  sessionStorage.removeItem('token');
   
   // Redirect to login page
   window.location.href = 'login.html';

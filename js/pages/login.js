@@ -3,12 +3,7 @@
  * Handles user authentication with username and password
  */
 
-// Mock accounts for demonstration
-const MOCK_ACCOUNTS = [
-  { user_id: 'U001', username: 'jsmith',  password: 'smith123',  role: 'Admin',   name: 'John Smith' },
-  { user_id: 'U002', username: 'jdoe',    password: 'doe123',    role: 'Manager', name: 'Jane Doe' },
-  { user_id: 'U003', username: 'ggates',  password: 'gates123',  role: 'Staff',   name: 'Grace Gates' }
-];
+import { login } from '../utils/api.js';
 
 /**
  * Show error message
@@ -30,35 +25,43 @@ function hideError() {
 /**
  * Handle login form submission
  */
-function handleLogin(event) {
+async function handleLogin(event) {
   event.preventDefault();
   hideError();
   
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
+  const submitButton = event.target.querySelector('button[type="submit"]');
   
-  // Find matching account
-  const account = MOCK_ACCOUNTS.find(
-    acc => acc.username === username && acc.password === password
-  );
+  console.log('Login attempt:', username);
   
-  if (account) {
-    // Create user object for session (exclude password)
-    const user = {
-      id: account.user_id,
-      name: account.name,
-      role: account.role,
-      email: `${account.username}@inventory.com`
-    };
+  // Disable button and show loading state
+  submitButton.disabled = true;
+  submitButton.textContent = 'Logging in...';
+  
+  try {
+    console.log('Calling API...');
+    // Call real API
+    const response = await login(username, password);
+    console.log('API response:', response);
     
-    // Save to sessionStorage
-    sessionStorage.setItem('currentUser', JSON.stringify(user));
+    // Store token and user info
+    sessionStorage.setItem('token', response.token);
+    sessionStorage.setItem('currentUser', JSON.stringify({
+      id: response.user.user_id,
+      name: response.user.full_name,
+      role: response.user.role,
+      email: response.user.email,
+      username: response.user.username
+    }));
     
     // Redirect to dashboard
     window.location.href = 'index.html';
-  } else {
+  } catch (error) {
     // Show error message
-    showError('Invalid username or password.');
+    showError(error.message || 'Login failed. Please try again.');
+    submitButton.disabled = false;
+    submitButton.textContent = 'Log In';
   }
 }
 
