@@ -8,7 +8,7 @@ import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { initSession } from '../components/session.js';
-import { getInventory, getProducts, getWarehouses } from '../data/mockData.js';
+import { getInventory, getProducts, getWarehouses, updateInventory } from '../utils/api.js';
 import { joinById, formatDate, isLowStock, debounce } from '../utils/utils.js';
 
 // State
@@ -251,7 +251,7 @@ function showInventoryModal() {
 /**
  * Handle inventory form submission
  */
-function handleInventorySubmit() {
+async function handleInventorySubmit() {
   const form = document.getElementById('inventory-form');
   
   if (!form.checkValidity()) {
@@ -261,21 +261,17 @@ function handleInventorySubmit() {
 
   const formData = {
     quantity_on_hand: parseInt(document.getElementById('quantity-on-hand').value),
-    reorder_level: parseInt(document.getElementById('reorder-level').value),
-    last_updated: new Date().toISOString().split('T')[0]
+    reorder_level: parseInt(document.getElementById('reorder-level').value)
   };
 
-  // Update existing inventory
-  const index = inventory.findIndex(i => i.inventory_id === editingInventory.inventory_id);
-  if (index !== -1) {
-    inventory[index] = { ...inventory[index], ...formData };
+  try {
+    await updateInventory(editingInventory.inventory_id, formData);
+    showToast('Inventory record updated successfully', 'success');
+    await loadData();
+    closeModal();
+  } catch (error) {
+    showToast(error.message || 'Update failed', 'error');
   }
-
-  showToast('Inventory record updated successfully', 'success');
-
-  // Refresh display
-  filterInventory();
-  closeModal();
 }
 
 /**
