@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Inventory System</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <style>
+    /* Login page specific styles */
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .login-container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .login-left {
+      flex: 1;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: var(--space-xl);
+    }
+
+    .login-branding {
+      text-align: center;
+    }
+
+    .login-branding h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin: 0 0 var(--space-sm) 0;
+    }
+
+    .login-branding p {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      margin: 0;
+    }
+
+    .login-illustration {
+      margin-top: var(--space-xl);
+      font-size: 8rem;
+      opacity: 0.3;
+    }
+
+    .login-right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: var(--space-xl);
+      background: white;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      padding: var(--space-xl);
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .login-card h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin: 0 0 var(--space-xs) 0;
+    }
+
+    .login-card p {
+      color: var(--color-text-secondary);
+      margin: 0 0 var(--space-lg) 0;
+    }
+
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: var(--space-sm) var(--space-md);
+      border: none;
+      box-shadow: 0 0 0 1.5px var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      color: var(--color-text-primary);
+      background: white;
+      transition: box-shadow 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--color-primary);
+    }
+
+    .form-group input::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-primary);
+      color: var(--color-text-primary);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-login:hover {
+      opacity: 0.9;
+    }
+
+    .btn-login:active {
+      opacity: 0.8;
+    }
+
+    .btn-login:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .error-message {
+      color: var(--color-danger);
+      font-size: 0.875rem;
+      margin-top: var(--space-xs);
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .login-container {
+        flex-direction: column;
+      }
+
+      .login-left {
+        flex: 0 0 auto;
+        padding: var(--space-lg);
+      }
+
+      .login-branding h1 {
+        font-size: 2rem;
+      }
+
+      .login-branding p {
+        font-size: 1rem;
+      }
+
+      .login-illustration {
+        display: none;
+      }
+
+      .login-right {
+        flex: 1;
+      }
+
+      .login-card {
+        padding: var(--space-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <!-- Left side: Branding -->
+    <div class="login-left">
+      <div class="login-branding">
+        <h1>Inventory</h1>
+        <p>Stock Control System</p>
+      </div>
+      <div class="login-illustration">📦</div>
+    </div>
+
+    <!-- Right side: Login form -->
+    <div class="login-right">
+      <div class="login-card">
+        <h2>Welcome Back</h2>
+        <p>Sign in to continue</p>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-username">Username</label>
+            <input
+              type="text"
+              id="login-username"
+              placeholder="Enter your username"
+              required
+              autocomplete="username"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input
+              type="password"
+              id="login-password"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            >
+          </div>
+
+          <div class="error-message" id="error-message">Invalid username or password.</div>
+
+          <button type="submit" class="btn-login">Log In</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/pages/login.js"></script>
+</body>
+</html>
