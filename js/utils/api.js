@@ -187,6 +187,13 @@ export async function getLowStockItems() {
   return apiRequest('/inventory/low-stock');
 }
 
+export async function updateInventory(id, data) {
+  return apiRequest(`/inventory/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+}
+
 // ============================================================================
 // STOCK TRANSACTIONS API
 // ============================================================================
@@ -266,6 +273,12 @@ export async function login(username, password) {
   }
 
   return await response.json();
+}
+
+export async function logout() {
+  return apiRequest('/auth/logout', {
+    method: 'POST'
+  });
 }
 
 // Made with Bob
