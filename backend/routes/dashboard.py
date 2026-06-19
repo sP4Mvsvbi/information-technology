@@ -17,8 +17,9 @@ GET /api/dashboard/recent-transactions
     so dashboard.js can render them without any changes.
 """
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from db import get_connection
+from .auth import require_role
 
 dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/api/dashboard")
 
@@ -27,6 +28,7 @@ dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/api/dashboard")
 # GET /api/dashboard/metrics
 # ---------------------------------------------------------------------------
 @dashboard_bp.get("/metrics")
+@require_role(["Manager"])
 def get_metrics():
     """
     Returns the four summary counts shown on the dashboard metric cards.
@@ -58,6 +60,7 @@ def get_metrics():
 # GET /api/dashboard/recent-transactions
 # ---------------------------------------------------------------------------
 @dashboard_bp.get("/recent-transactions")
+@require_role(["Manager"])
 def get_recent_transactions():
     """
     Returns the 6 most recent stock transactions (IN + OUT combined).

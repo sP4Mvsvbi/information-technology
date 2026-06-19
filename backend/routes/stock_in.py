@@ -4,6 +4,7 @@ routes/stock_in.py — Stock In transactions API endpoints.
 
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from .auth import require_role
 
 stock_in_bp = Blueprint("stock_in", __name__, url_prefix="/api/stock-in")
 
@@ -24,6 +25,7 @@ def _serialize_stock_in(row: dict) -> dict:
 # GET /api/stock-in
 # ---------------------------------------------------------------------------
 @stock_in_bp.get("/")
+@require_role(["Manager"])
 def get_stock_in():
     """Return all incoming stock transactions, ordered by date desc."""
     conn = None
@@ -48,6 +50,7 @@ def get_stock_in():
 # POST /api/stock-in
 # ---------------------------------------------------------------------------
 @stock_in_bp.post("/")
+@require_role(["Manager"])
 def create_stock_in():
     """
     Record a new incoming stock transaction.

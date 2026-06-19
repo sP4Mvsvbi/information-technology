@@ -4,6 +4,7 @@ routes/stock_out.py — Stock Out transactions API endpoints.
 
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from .auth import require_role
 
 stock_out_bp = Blueprint("stock_out", __name__, url_prefix="/api/stock-out")
 
@@ -20,6 +21,7 @@ def _serialize_stock_out(row: dict) -> dict:
 # GET /api/stock-out
 # ---------------------------------------------------------------------------
 @stock_out_bp.get("/")
+@require_role(["Manager"])
 def get_stock_out():
     """Return all outgoing stock transactions, ordered by date desc."""
     conn = None
@@ -44,6 +46,7 @@ def get_stock_out():
 # POST /api/stock-out
 # ---------------------------------------------------------------------------
 @stock_out_bp.post("/")
+@require_role(["Manager"])
 def create_stock_out():
     """
     Record a new outgoing stock transaction.

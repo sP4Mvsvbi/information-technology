@@ -7,7 +7,7 @@ import { initSidebar } from '../components/sidebar.js';
 import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
-import { initSession } from '../components/session.js';
+import { initSession, requireRole } from '../components/session.js';
 import { getStockIn, createStockIn, getProducts, getWarehouses, getSuppliers, getUsers } from '../utils/api.js';
 import { joinById, formatDate, debounce } from '../utils/utils.js';
 
@@ -25,6 +25,7 @@ let filteredStockIn = [];
 async function init() {
   // Initialize session
   await initSession();
+  requireRole(['Manager']);
   
   // Initialize sidebar
   initSidebar('stock-in');

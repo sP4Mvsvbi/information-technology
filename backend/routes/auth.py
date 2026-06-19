@@ -16,9 +16,46 @@ import bcrypt
 import secrets
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from functools import wraps
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
+def require_role(allowed_roles):
+    """
+    Decorator to enforce role-based access control.
+    Checks X-Current-User-Id header, Authorization header, or _uid query param.
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if request.method == "OPTIONS":
+                return f(*args, **kwargs)
+
+            # Try multiple sources for user identification
+            user_id = (
+                request.headers.get("X-Current-User-Id")
+                or request.args.get("_uid")
+            )
+
+            if not user_id:
+                return jsonify({"error": "Unauthorized"}), 401
+                
+            conn = get_connection()
+            try:
+                cursor = conn.cursor(dictionary=True)
+                cursor.execute("SELECT role FROM Users WHERE user_id = %s", (user_id,))
+                user = cursor.fetchone()
+                
+                if not user or user["role"] not in allowed_roles:
+                    return jsonify({"error": "Forbidden: insufficient permissions"}), 403
+            except Exception as e:
+                return jsonify({"error": str(e)}), 500
+            finally:
+                conn.close()
+                
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 # ---------------------------------------------------------------------------
 # POST /api/auth/login

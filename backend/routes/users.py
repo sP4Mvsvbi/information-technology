@@ -15,6 +15,7 @@ All writes go through the stored procedures in stored_procedures.sql.
 import bcrypt
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from .auth import require_role
 
 users_bp = Blueprint("users", __name__, url_prefix="/api/users")
 
@@ -46,6 +47,7 @@ def _next_user_id(cursor) -> str:
 # GET /api/users
 # ---------------------------------------------------------------------------
 @users_bp.get("/")
+@require_role(["Admin", "Manager"])
 def get_users():
     """Return all active users, password hash excluded."""
     conn = get_connection()
@@ -65,6 +67,7 @@ def get_users():
 # POST /api/users
 # ---------------------------------------------------------------------------
 @users_bp.post("/")
+@require_role(["Admin"])
 def create_user():
     """
     Create a new user.
@@ -130,6 +133,7 @@ def create_user():
 # PUT /api/users/<user_id>
 # ---------------------------------------------------------------------------
 @users_bp.put("/<user_id>")
+@require_role(["Admin"])
 def update_user(user_id: str):
     """
     Update a user's full_name, email, and/or role.
@@ -183,6 +187,7 @@ def update_user(user_id: str):
 # DELETE /api/users/<user_id>
 # ---------------------------------------------------------------------------
 @users_bp.delete("/<user_id>")
+@require_role(["Admin"])
 def delete_user(user_id: str):
     """
     Delete a user:

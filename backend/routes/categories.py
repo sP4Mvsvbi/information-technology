@@ -4,6 +4,7 @@ routes/categories.py — Categories API endpoints.
 
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from .auth import require_role
 
 categories_bp = Blueprint("categories", __name__, url_prefix="/api/categories")
 
@@ -20,6 +21,7 @@ def _serialize_category(row: dict) -> dict:
 # GET /api/categories
 # ---------------------------------------------------------------------------
 @categories_bp.get("/")
+@require_role(["Manager"])
 def get_categories():
     """Return all categories, ordered by name."""
     conn = None
@@ -44,6 +46,7 @@ def get_categories():
 # GET /api/categories/<category_id>
 # ---------------------------------------------------------------------------
 @categories_bp.get("/<category_id>")
+@require_role(["Manager"])
 def get_category(category_id: str):
     """Retrieve a single category by ID."""
     conn = None
@@ -71,6 +74,7 @@ def get_category(category_id: str):
 # POST /api/categories
 # ---------------------------------------------------------------------------
 @categories_bp.post("/")
+@require_role(["Manager"])
 def create_category():
     """
     Create a new category.
@@ -123,6 +127,7 @@ def create_category():
 # PUT /api/categories/<category_id>
 # ---------------------------------------------------------------------------
 @categories_bp.put("/<category_id>")
+@require_role(["Manager"])
 def update_category(category_id: str):
     """
     Update an existing category.
@@ -176,6 +181,7 @@ def update_category(category_id: str):
 # DELETE /api/categories/<category_id>
 # ---------------------------------------------------------------------------
 @categories_bp.delete("/<category_id>")
+@require_role(["Manager"])
 def delete_category(category_id: str):
     """Delete a category."""
     conn = None

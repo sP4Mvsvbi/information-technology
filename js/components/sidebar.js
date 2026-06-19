@@ -61,7 +61,34 @@ const NAV_GROUPS = [
  * @returns {string} HTML string for the sidebar
  */
 export function renderSidebar(currentPageKey) {
-  const groupsHtml = NAV_GROUPS.map(group => {
+  // Get current user from sessionStorage for role-based rendering
+  let userName = '';
+  let userRole = '';
+  let userInitials = '';
+  try {
+    const stored = sessionStorage.getItem('currentUser');
+    if (stored) {
+      const u = JSON.parse(stored);
+      userName = u.name || '';
+      userRole = u.role || '';
+      const parts = userName.trim().split(' ');
+      userInitials = parts.length >= 2
+        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        : userName.substring(0, 2).toUpperCase();
+    }
+  } catch (e) { /* ignore */ }
+
+  const filteredGroups = NAV_GROUPS.filter(group => {
+    if (userRole === 'Admin') {
+      return group.title === 'Admin';
+    }
+    if (userRole === 'Manager') {
+      return group.title !== 'Admin';
+    }
+    return false; // Default fallback
+  });
+
+  const groupsHtml = filteredGroups.map(group => {
     const itemsHtml = group.items.map(item => {
       const isActive = item.key === currentPageKey;
       const activeClass = isActive ? 'active' : '';
@@ -85,22 +112,7 @@ export function renderSidebar(currentPageKey) {
 
   const logoIcon = ICONS.products; // Using package icon for logo
 
-  // Get current user from sessionStorage for footer display
-  let userName = '';
-  let userRole = '';
-  let userInitials = '';
-  try {
-    const stored = sessionStorage.getItem('currentUser');
-    if (stored) {
-      const u = JSON.parse(stored);
-      userName = u.name || '';
-      userRole = u.role || '';
-      const parts = userName.trim().split(' ');
-      userInitials = parts.length >= 2
-        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-        : userName.substring(0, 2).toUpperCase();
-    }
-  } catch (e) { /* ignore */ }
+
 
   return `
     <aside class="sidebar" id="sidebar">

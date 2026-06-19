@@ -4,6 +4,7 @@ routes/products.py — Products API endpoints.
 
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from .auth import require_role
 
 products_bp = Blueprint("products", __name__, url_prefix="/api/products")
 
@@ -22,6 +23,7 @@ def _serialize_product(row: dict) -> dict:
 # GET /api/products
 # ---------------------------------------------------------------------------
 @products_bp.get("/")
+@require_role(["Manager"])
 def get_products():
     """Return all products, ordered by name."""
     conn = None
@@ -46,6 +48,7 @@ def get_products():
 # GET /api/products/<product_id>
 # ---------------------------------------------------------------------------
 @products_bp.get("/<product_id>")
+@require_role(["Manager"])
 def get_product(product_id: str):
     """Retrieve a single product by ID."""
     conn = None
@@ -73,6 +76,7 @@ def get_product(product_id: str):
 # POST /api/products
 # ---------------------------------------------------------------------------
 @products_bp.post("/")
+@require_role(["Manager"])
 def create_product():
     """
     Create a new product.
@@ -133,6 +137,7 @@ def create_product():
 # PUT /api/products/<product_id>
 # ---------------------------------------------------------------------------
 @products_bp.put("/<product_id>")
+@require_role(["Manager"])
 def update_product(product_id: str):
     """
     Update an existing product.
@@ -198,6 +203,7 @@ def update_product(product_id: str):
 # DELETE /api/products/<product_id>
 # ---------------------------------------------------------------------------
 @products_bp.delete("/<product_id>")
+@require_role(["Manager"])
 def delete_product(product_id: str):
     """Delete a product."""
     conn = None

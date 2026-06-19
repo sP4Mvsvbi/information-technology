@@ -4,7 +4,7 @@
  */
 
 import { initSidebar } from '../components/sidebar.js';
-import { initSession } from '../components/session.js';
+import { initSession, requireRole } from '../components/session.js';
 import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { renderMetricCards } from '../components/card.js';
 import {
@@ -31,6 +31,7 @@ let stockOutRecords = [];
 async function init() {
   // Initialize session
   await initSession();
+  requireRole(['Manager']);
   
   // Initialize sidebar
   initSidebar('dashboard');

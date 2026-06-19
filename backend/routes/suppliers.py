@@ -12,6 +12,7 @@ DELETE /api/suppliers/<id>         Delete a supplier
 
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from .auth import require_role
 
 suppliers_bp = Blueprint("suppliers", __name__, url_prefix="/api/suppliers")
 
@@ -28,6 +29,7 @@ def _serialize_supplier(row: dict) -> dict:
 # GET /api/suppliers
 # ---------------------------------------------------------------------------
 @suppliers_bp.get("/")
+@require_role(["Manager"])
 def get_suppliers():
     """Return all suppliers, ordered by name."""
     conn = None
@@ -52,6 +54,7 @@ def get_suppliers():
 # GET /api/suppliers/<supplier_id>
 # ---------------------------------------------------------------------------
 @suppliers_bp.get("/<supplier_id>")
+@require_role(["Manager"])
 def get_supplier(supplier_id: str):
     """Retrieve a single supplier by ID."""
     conn = None
@@ -79,6 +82,7 @@ def get_supplier(supplier_id: str):
 # POST /api/suppliers
 # ---------------------------------------------------------------------------
 @suppliers_bp.post("/")
+@require_role(["Manager"])
 def create_supplier():
     """
     Create a new supplier.
@@ -135,6 +139,7 @@ def create_supplier():
 # PUT /api/suppliers/<supplier_id>
 # ---------------------------------------------------------------------------
 @suppliers_bp.put("/<supplier_id>")
+@require_role(["Manager"])
 def update_supplier(supplier_id: str):
     """
     Update an existing supplier.
@@ -195,6 +200,7 @@ def update_supplier(supplier_id: str):
 # DELETE /api/suppliers/<supplier_id>
 # ---------------------------------------------------------------------------
 @suppliers_bp.delete("/<supplier_id>")
+@require_role(["Manager"])
 def delete_supplier(supplier_id: str):
     """Delete a supplier."""
     conn = None

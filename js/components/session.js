@@ -37,6 +37,28 @@ export async function initSession() {
 }
 
 /**
+ * Require specific roles to access the current page.
+ * If user does not have an allowed role, redirects them.
+ * @param {Array<string>} allowedRoles 
+ */
+export function requireRole(allowedRoles) {
+  if (!currentUser) {
+    window.location.href = 'login.html';
+    return;
+  }
+  
+  if (!allowedRoles.includes(currentUser.role)) {
+    alert('Access Denied: You do not have permission to view this page.');
+    // Redirect based on role
+    if (currentUser.role === 'Admin') {
+      window.location.href = 'users.html';
+    } else {
+      window.location.href = 'index.html';
+    }
+  }
+}
+
+/**
  * Get user initials from full name
  */
 function getInitials(fullName) {

@@ -56,6 +56,13 @@ class StaticFileHandler(http.server.SimpleHTTPRequestHandler):
         ".ico":  "image/x-icon",
     }
 
+    def end_headers(self):
+        # Prevent browser caching during development
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
     def log_message(self, fmt, *args):
         # Print a minimal access log: method + path + status
         print(f"  {self.command:<6} {self.path:<45} {args[1]}")

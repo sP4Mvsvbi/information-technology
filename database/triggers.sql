@@ -29,7 +29,8 @@ BEGIN
     
     -- If inventory record doesn't exist, create it
     IF ROW_COUNT() = 0 THEN
-        SELECT COUNT(*) + 1 INTO next_id FROM Inventory;
+        -- Workaround for MySQL Error 1093
+        SELECT COUNT(*) + 1 INTO next_id FROM (SELECT * FROM Inventory) AS tmp;
 
         INSERT INTO Inventory (
             inventory_id,

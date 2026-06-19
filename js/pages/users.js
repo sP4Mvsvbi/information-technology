@@ -7,7 +7,7 @@ import { initSidebar } from '../components/sidebar.js';
 import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
-import { initSession, getCurrentUser } from '../components/session.js';
+import { initSession, getCurrentUser, requireRole } from '../components/session.js';
 import { getUsers, createUser, updateUser, deleteUser } from '../data/api.js';
 import { debounce, escapeHtml } from '../utils/utils.js';
 
@@ -25,6 +25,7 @@ const ROLES = ['Admin', 'Manager', 'Viewer'];
 async function init() {
   // Initialize session
   await initSession();
+  requireRole(['Admin']);
   
   // Initialize sidebar
   initSidebar('users');

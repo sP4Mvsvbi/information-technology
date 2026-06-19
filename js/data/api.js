@@ -16,9 +16,23 @@ const API_BASE = 'http://localhost:5000/api';
  * @param {RequestInit} options - standard fetch options
  */
 async function apiFetch(path, options = {}) {
-  const url = `${API_BASE}${path}`;
+  const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+  
+  // Append user ID as query param for role-based auth
+  let url = `${API_BASE}${path}`;
+  if (currentUser.id) {
+    const separator = url.includes('?') ? '&' : '?';
+    url += `${separator}_uid=${currentUser.id}`;
+  }
+  
+  const headers = { 
+    'Content-Type': 'application/json',
+    'X-Current-User-Id': currentUser.id || '',
+    ...options.headers 
+  };
+
   const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
+    headers,
     ...options,
   });
 

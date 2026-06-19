@@ -4,6 +4,7 @@ routes/inventory.py — Inventory API endpoints.
 
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from .auth import require_role
 
 inventory_bp = Blueprint("inventory", __name__, url_prefix="/api/inventory")
 
@@ -21,6 +22,7 @@ def _serialize_inventory(row: dict) -> dict:
 # GET /api/inventory
 # ---------------------------------------------------------------------------
 @inventory_bp.get("/")
+@require_role(["Manager"])
 def get_inventory():
     """Return all inventory items with product and warehouse names."""
     conn = None
@@ -45,6 +47,7 @@ def get_inventory():
 # GET /api/inventory/low-stock
 # ---------------------------------------------------------------------------
 @inventory_bp.get("/low-stock")
+@require_role(["Manager"])
 def get_low_stock():
     """Return all low stock inventory items."""
     conn = None
@@ -69,6 +72,7 @@ def get_low_stock():
 # PUT /api/inventory/<inventory_id>
 # ---------------------------------------------------------------------------
 @inventory_bp.put("/<inventory_id>")
+@require_role(["Manager"])
 def update_inventory(inventory_id: str):
     """
     Directly update inventory quantity on hand and reorder level.

@@ -36,7 +36,7 @@ def create_app() -> Flask:
         r"/api/*": {
             "origins": Config.FRONTEND_ORIGIN,
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            "allow_headers": ["Content-Type", "Authorization"],
+            "allow_headers": ["Content-Type", "Authorization", "X-Current-User-Id"],
         }
     })
 

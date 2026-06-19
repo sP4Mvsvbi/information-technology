@@ -27,13 +27,26 @@ async function apiRequest(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
+  const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+  if (currentUser.id) {
+    headers['X-Current-User-Id'] = currentUser.id;
+  }
+
   const config = {
     ...options,
     headers
   };
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    // Append user ID as query param (reliable fallback for role checks)
+    let url = `${API_BASE_URL}${endpoint}`;
+    const currentUserForUrl = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+    if (currentUserForUrl.id) {
+      const separator = url.includes('?') ? '&' : '?';
+      url += `${separator}_uid=${currentUserForUrl.id}`;
+    }
+
+    const response = await fetch(url, config);
     
     if (!response.ok) {
       const error = await response.json();

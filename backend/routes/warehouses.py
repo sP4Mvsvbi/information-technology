@@ -4,6 +4,7 @@ routes/warehouses.py — Warehouses API endpoints.
 
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from .auth import require_role
 
 warehouses_bp = Blueprint("warehouses", __name__, url_prefix="/api/warehouses")
 
@@ -20,6 +21,7 @@ def _serialize_warehouse(row: dict) -> dict:
 # GET /api/warehouses
 # ---------------------------------------------------------------------------
 @warehouses_bp.get("/")
+@require_role(["Manager"])
 def get_warehouses():
     """Return all warehouses, ordered by name."""
     conn = None
@@ -44,6 +46,7 @@ def get_warehouses():
 # GET /api/warehouses/<warehouse_id>
 # ---------------------------------------------------------------------------
 @warehouses_bp.get("/<warehouse_id>")
+@require_role(["Manager"])
 def get_warehouse(warehouse_id: str):
     """Retrieve a single warehouse by ID."""
     conn = None
@@ -71,6 +74,7 @@ def get_warehouse(warehouse_id: str):
 # POST /api/warehouses
 # ---------------------------------------------------------------------------
 @warehouses_bp.post("/")
+@require_role(["Manager"])
 def create_warehouse():
     """
     Create a new warehouse.
@@ -125,6 +129,7 @@ def create_warehouse():
 # PUT /api/warehouses/<warehouse_id>
 # ---------------------------------------------------------------------------
 @warehouses_bp.put("/<warehouse_id>")
+@require_role(["Manager"])
 def update_warehouse(warehouse_id: str):
     """
     Update an existing warehouse.
@@ -181,6 +186,7 @@ def update_warehouse(warehouse_id: str):
 # DELETE /api/warehouses/<warehouse_id>
 # ---------------------------------------------------------------------------
 @warehouses_bp.delete("/<warehouse_id>")
+@require_role(["Manager"])
 def delete_warehouse(warehouse_id: str):
     """Delete a warehouse."""
     conn = None

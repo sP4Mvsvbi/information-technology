@@ -7,7 +7,7 @@ import { initSidebar } from '../components/sidebar.js';
 import { renderTable, renderTableSkeleton } from '../components/table.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
-import { initSession } from '../components/session.js';
+import { initSession, requireRole } from '../components/session.js';
 import { getProducts, createProduct, updateProduct, deleteProduct, getCategories, getSuppliers } from '../utils/api.js';
 import { formatCurrency, joinById, debounce } from '../utils/utils.js';
 
@@ -24,6 +24,7 @@ let editingProduct = null;
 async function init() {
   // Initialize session
   await initSession();
+  requireRole(['Manager']);
   
   // Initialize sidebar
   initSidebar('products');
